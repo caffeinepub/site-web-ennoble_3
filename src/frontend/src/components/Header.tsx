@@ -66,7 +66,7 @@ export default function Header() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between h-24">
+          <div className="flex items-center justify-between h-40">
             {/* Logo */}
             <Link
               to="/"
@@ -76,7 +76,7 @@ export default function Header() {
               <img
                 src="/assets/uploads/sw-e-1.png"
                 alt="Site Web Ennoble"
-                className="h-24 w-auto object-contain mix-blend-multiply dark:mix-blend-screen"
+                className="h-40 w-auto object-contain mix-blend-multiply dark:mix-blend-screen"
                 style={{ background: "transparent" }}
                 onError={(e) => {
                   const target = e.currentTarget;
@@ -184,7 +184,7 @@ export default function Header() {
       </header>
 
       {/* Spacer to offset fixed header */}
-      <div className="h-24" aria-hidden="true" />
+      <div className="h-40" aria-hidden="true" />
     </>
   );
 }
