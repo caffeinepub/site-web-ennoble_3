@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { SiInstagram, SiLinkedin, SiWhatsapp } from "react-icons/si";
 
 export default function Footer() {
@@ -18,7 +19,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm text-white/60 leading-relaxed max-w-xs">
-              Your permanent digital landmark — strategically built to convert.
+              Digital dignity, built to convert.
             </p>
             {/* Social icons */}
             <div className="flex items-center gap-4 pt-2">
@@ -101,17 +102,26 @@ export default function Footer() {
           <p className="text-sm text-white/40">
             © {year} site web ennoble. All rights reserved.
           </p>
-          <p className="text-sm text-white/30">
-            Built with love using{" "}
-            <a
-              href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(hostname)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/40 hover:text-white/60 underline transition-colors"
+          <div className="flex items-center gap-4">
+            <p className="text-sm text-white/30">
+              Built with love using{" "}
+              <a
+                href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(hostname)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/40 hover:text-white/60 underline transition-colors"
+              >
+                caffeine.ai
+              </a>
+            </p>
+            <Link
+              to="/admin"
+              data-ocid="footer.admin.link"
+              className="text-xs text-white/20 hover:text-white/40 transition-colors no-underline hover:underline"
             >
-              caffeine.ai
-            </a>
-          </p>
+              Admin
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

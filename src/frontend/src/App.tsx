@@ -10,6 +10,7 @@ import Chatbot from "./components/Chatbot";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import WhatsAppButton from "./components/WhatsAppButton";
+import Admin from "./pages/Admin";
 import Home from "./pages/Home";
 import Page2 from "./pages/Page2";
 
@@ -44,7 +45,13 @@ const page2Route = createRoute({
   component: Page2,
 });
 
-const routeTree = rootRoute.addChildren([homeRoute, page2Route]);
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/admin",
+  component: Admin,
+});
+
+const routeTree = rootRoute.addChildren([homeRoute, page2Route, adminRoute]);
 
 const router = createRouter({ routeTree });
 

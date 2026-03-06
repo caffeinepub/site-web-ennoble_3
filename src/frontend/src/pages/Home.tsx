@@ -8,6 +8,7 @@ import { useRouter } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { useRef, useState } from "react";
 import { SiInstagram, SiLinkedin, SiWhatsapp } from "react-icons/si";
+import { useSubmitEnquiry } from "../hooks/useQueries";
 
 /* ─── Hero ─── */
 function HeroSection() {
@@ -728,8 +729,6 @@ function FAQsSection() {
 }
 
 /* ─── Contact ─── */
-const ENQUIRY_EMAIL = "sitewebennoble@gmail.com";
-
 function ContactSection() {
   const [form, setForm] = useState({
     fullName: "",
@@ -741,6 +740,12 @@ function ContactSection() {
   const [submitted, setSubmitted] = useState(false);
 
   const formRef = useRef<HTMLFormElement>(null);
+  const submitEnquiry = useSubmitEnquiry();
+
+  const isSubmitting = submitEnquiry.isPending;
+  const submitError = submitEnquiry.isError
+    ? "Something went wrong. Please try again."
+    : null;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -748,26 +753,21 @@ function ContactSection() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const subject = encodeURIComponent(
-      `New Enquiry from ${form.fullName} — Site Web Ennoble`,
+    submitEnquiry.mutate(
+      {
+        fullName: form.fullName,
+        email: form.email,
+        city: form.city,
+        currentWebsite: form.currentWebsite ? form.currentWebsite : null,
+        improvement: form.improvement,
+      },
+      {
+        onSuccess: () => setSubmitted(true),
+      },
     );
-    const body = encodeURIComponent(
-      [
-        `Full Name: ${form.fullName}`,
-        `Email: ${form.email}`,
-        `City: ${form.city}`,
-        `Current Website: ${form.currentWebsite || "N/A"}`,
-        "",
-        "What needs improvement:",
-        form.improvement,
-      ].join("\n"),
-    );
-
-    window.location.href = `mailto:${ENQUIRY_EMAIL}?subject=${subject}&body=${body}`;
-    setSubmitted(true);
   };
 
   /* Shared input class */
@@ -795,12 +795,6 @@ function ContactSection() {
                   className="block text-lg font-light text-ennoble-text hover:text-ennoble-subtext transition-colors duration-150 tracking-tight"
                 >
                   0090 7045509097
-                </a>
-                <a
-                  href={`mailto:${ENQUIRY_EMAIL}`}
-                  className="block text-base text-ennoble-subtext hover:text-ennoble-text transition-colors duration-150"
-                >
-                  {ENQUIRY_EMAIL}
                 </a>
                 <p className="text-base text-ennoble-subtext">
                   Kolkata, West Bengal – 700031
@@ -883,11 +877,10 @@ function ContactSection() {
                   </svg>
                 </div>
                 <p className="font-semibold text-ennoble-text mb-2">
-                  Your email client has opened with the enquiry
+                  Enquiry submitted successfully
                 </p>
                 <p className="text-sm text-ennoble-subtext">
-                  Please send the email to complete your enquiry. We'll be in
-                  touch within 1 business day.
+                  Thank you. We'll be in touch within 1 business day.
                 </p>
                 <button
                   type="button"
@@ -1004,15 +997,58 @@ function ContactSection() {
                   />
                 </div>
 
+                {/* Error message */}
+                {submitError && (
+                  <div
+                    data-ocid="contact.error_state"
+                    className="px-4 py-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-700"
+                    role="alert"
+                  >
+                    {submitError}
+                  </div>
+                )}
+
                 {/* ── P2: Submit button with scoped transitions & arrow ── */}
-                <button
-                  type="submit"
-                  data-ocid="contact.submit_button"
-                  className="btn-primary w-full py-3.5 bg-ennoble-text text-white font-medium text-sm tracking-wide rounded-md hover:bg-ennoble-yellow hover:text-ennoble-text flex items-center justify-center gap-2.5"
-                >
-                  Submit Enquiry
-                  <ArrowRight size={14} className="opacity-60" />
-                </button>
+                {isSubmitting ? (
+                  <button
+                    type="button"
+                    disabled
+                    data-ocid="contact.loading_state"
+                    className="w-full py-3.5 bg-ennoble-text/60 text-white font-medium text-sm tracking-wide rounded-md flex items-center justify-center gap-2.5 cursor-not-allowed"
+                  >
+                    <svg
+                      className="animate-spin h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                    Submitting...
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    data-ocid="contact.submit_button"
+                    className="btn-primary w-full py-3.5 bg-ennoble-text text-white font-medium text-sm tracking-wide rounded-md hover:bg-ennoble-yellow hover:text-ennoble-text flex items-center justify-center gap-2.5"
+                  >
+                    Submit Enquiry
+                    <ArrowRight size={14} className="opacity-60" />
+                  </button>
+                )}
               </form>
             )}
           </div>

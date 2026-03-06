@@ -1,4 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import type { Enquiry } from "../backend";
 import { useActor } from "./useActor";
 
 export function useSubmitEnquiry() {
@@ -27,5 +28,31 @@ export function useSubmitEnquiry() {
         improvement,
       );
     },
+  });
+}
+
+export function useGetAllEnquiries(enabled: boolean) {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<Enquiry[]>({
+    queryKey: ["enquiries"],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllEnquiries();
+    },
+    enabled: enabled && !!actor && !isFetching,
+  });
+}
+
+export function useGetSubmissionCount(enabled: boolean) {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<bigint>({
+    queryKey: ["submissionCount"],
+    queryFn: async () => {
+      if (!actor) return BigInt(0);
+      return actor.getSubmissionCount();
+    },
+    enabled: enabled && !!actor && !isFetching,
   });
 }
